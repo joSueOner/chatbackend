@@ -14,18 +14,14 @@ implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
   private _Chat:ChatDto[] = [];
 
   afterInit(server: any) {
-    // console.log('Method not implemented.');
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.server.emit('messages', this._Chat);
-
+   this.server.emit('messages', this._Chat);
     // console.log('Method not implemented.');
   }
 
   handleDisconnect(client: Socket) {
-    console.log("disconnect client" + client.id);
-    console.log('Method not implemented.');
   }
   
   @SubscribeMessage('message')
@@ -37,9 +33,11 @@ implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
       date: new Date().toLocaleString()
     };
     this._Chat = [...this._Chat, payload];
-    this.server.emit('newMessage', payload);
+    if(payload.message === "clear"){
+      this._Chat = [];
+    }
+    this.server.emit('messages', this._Chat);
 
-    // return 'Hello world!';
   }
 
 
